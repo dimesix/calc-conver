@@ -3,29 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Conversão</title>
+    <title>Calculadora de Conversão & Agenda</title>
     <style>
         /* ================= ESTILOS (CSS) ================= */
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap');
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
+        :root {
+            --glass: rgba(255, 255, 255, 0.15);
+            --border: rgba(255, 255, 255, 0.3);
+            --accent: #ff007a;
+            --success: #00f2ff;
         }
 
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
         body {
-            /* Fundo vibrante com gradiente animado */
             background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             color: white;
-            overflow: hidden;
+            padding: 20px;
         }
 
         @keyframes gradientBG {
@@ -34,252 +35,314 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* Container estilo vidro (Glassmorphism) */
         .container {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 3rem;
-            width: 90%;
+            background: var(--glass);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-radius: 30px;
+            border: 1px solid var(--border);
+            padding: 40px;
+            width: 100%;
             max-width: 450px;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
             text-align: center;
-            position: relative;
+            transition: all 0.5s ease;
         }
 
-        h1 {
-            font-size: 1.8rem;
-            margin-bottom: 2rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: 700;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-
-        /* Inputs Transparentes */
-        .input-group {
-            position: relative;
-            margin-bottom: 2rem;
-        }
-
-        .input-group label {
-            position: absolute;
-            top: -20px;
-            left: 0;
-            font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.8);
-            font-weight: 500;
-        }
-
-        .input-group input {
-            width: 100%;
-            padding: 10px 0;
-            font-size: 1.2rem;
-            color: #fff;
-            background: transparent;
-            border: none;
-            border-bottom: 2px solid rgba(255, 255, 255, 0.4);
-            outline: none;
-            transition: border-color 0.3s;
-            text-align: center;
-        }
-
-        .input-group input:focus {
-            border-bottom: 2px solid #fff;
-        }
-
-        /* Botão Principal */
-        .btn {
-            background: white;
-            color: #e73c7e;
-            border: none;
-            padding: 12px 30px;
-            font-size: 1rem;
-            font-weight: bold;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            text-transform: uppercase;
-            width: 100%;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-        }
-
-        .btn:active {
-            transform: translateY(1px);
-        }
-
-        .btn-outline {
-            background: transparent;
-            border: 2px solid white;
-            color: white;
-            margin-top: 1.5rem;
-        }
-
-        .btn-outline:hover {
-            background: rgba(255,255,255,0.1);
-        }
-
-        /* Área de Resultado */
-        .result-screen {
-            display: none; /* Escondido inicialmente */
+        .container.expanded {
+            max-width: 1300px;
+            height: 92vh;
+            display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
         }
 
-        .percentage-display {
-            font-size: 4.5rem;
-            font-weight: 700;
-            margin: 1.5rem 0;
-            text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        h1 { font-size: 1.6rem; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 30px; }
+
+        .input-group { position: relative; margin-bottom: 25px; text-align: left; }
+        .input-group label { display: block; font-size: 0.75rem; font-weight: 600; margin-bottom: 8px; text-transform: uppercase; opacity: 0.9; }
+        .input-group input {
+            width: 100%; padding: 12px 20px; font-size: 1.1rem; color: #fff;
+            background: rgba(0,0,0,0.2); border: 2px solid transparent; border-radius: 15px; outline: none; transition: 0.3s;
+        }
+        .input-group input:focus { border-color: white; background: rgba(0,0,0,0.3); }
+
+        .btn {
+            background: white; color: #e73c7e; border: none; padding: 15px; font-size: 1rem; font-weight: 700;
+            border-radius: 15px; cursor: pointer; transition: 0.3s; width: 100%; margin-bottom: 12px; text-transform: uppercase;
+        }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        .btn-outline { background: transparent; border: 2px solid white; color: white; }
+
+        .btn-panic {
+            background: rgba(255, 0, 0, 0.2); border: 1px solid rgba(255, 0, 0, 0.4);
+            color: #ffb3b3; font-size: 0.7rem; padding: 8px 15px; margin-top: 20px; border-radius: 8px; cursor: pointer;
         }
 
-        .result-label {
-            font-size: 1rem;
-            opacity: 0.9;
+        .percentage-display { font-size: 5rem; font-weight: 800; margin: 20px 0; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3)); }
+
+        /* AGENDA */
+        #appointmentScreen { display: none; flex-direction: column; height: 100%; gap: 15px; }
+        .calendar-container { background: rgba(0,0,0,0.2); border-radius: 20px; padding: 15px 25px; border: 1px solid var(--border); }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
+        .calendar-cell {
+            background: rgba(255,255,255,0.1); border-radius: 8px; height: 35px;
+            display: flex; align-items: center; justify-content: center; position: relative; font-size: 0.8rem;
+        }
+        .calendar-cell.today { background: var(--success); color: #000; font-weight: bold; }
+        .badge { position: absolute; top: -3px; right: -3px; background: var(--accent); width: 16px; height: 16px; border-radius: 50%; font-size: 0.6rem; display: flex; align-items: center; justify-content: center; border: 1px solid white; }
+
+        /* PAINÉIS AMPLIADOS */
+        .bottom-panels { display: flex; gap: 20px; flex: 1; min-height: 0; }
+        .glass-panel {
+            background: rgba(255,255,255,0.05); border-radius: 25px; padding: 30px;
+            flex: 1; display: flex; flex-direction: column; border: 1px solid var(--border); overflow-y: auto;
         }
 
-        /* Footer */
-        .footer {
-            margin-top: 2.5rem;
-            font-size: 0.75rem;
-            opacity: 0.6;
-            border-top: 1px solid rgba(255,255,255,0.2);
-            padding-top: 1rem;
+        .appointment-card {
+            background: rgba(255,255,255,0.1); margin-bottom: 12px; padding: 18px; border-radius: 18px;
+            display: flex; justify-content: space-between; align-items: center; border-left: 6px solid var(--success);
         }
+        .delete-btn { background: rgba(255,0,0,0.4); border: none; color: white; width: 35px; height: 35px; border-radius: 12px; cursor: pointer; font-weight: bold; }
 
-        /* Utilitários de animação */
-        .fade-in {
-            animation: fadeIn 0.5s ease-in-out;
-        }
+        .date-selectors { display: flex; gap: 10px; margin-bottom: 25px; }
+        .date-btn { flex: 1; background: rgba(255,255,255,0.1); border: 1px solid var(--border); color: white; padding: 12px; border-radius: 14px; cursor: pointer; font-weight: 600; }
+        .date-btn.active { background: white; color: #e73c7e; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 10px; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>Calculadora de Conversão</h1>
-
-        <div id="inputScreen" class="fade-in">
-            <div class="input-group">
-                <label for="sales">Vendas</label>
-                <input type="number" id="sales" placeholder="0" min="0">
+    <div class="container" id="mainContainer">
+        <div id="calcSection">
+            <h1>Calculadora de Conversão</h1>
+            <div id="inputScreen">
+                <div class="input-group"><label>Total de Vendas</label><input type="number" id="sales" placeholder="0"></div>
+                <div class="input-group"><label>Total de Chamadas</label><input type="number" id="calls" placeholder="0"></div>
+                <button class="btn" onclick="calculate()">Calcular Taxa</button>
+                <button class="btn btn-outline" onclick="toggleAgenda(true)">Agenda de Retornos</button>
             </div>
-
-            <div class="input-group">
-                <label for="calls">Chamadas</label>
-                <input type="number" id="calls" placeholder="0" min="1">
+            <div id="resultScreen" style="display:none">
+                <p style="font-weight: 600; opacity: 0.8;">Sua conversão é de:</p>
+                <div class="percentage-display" id="resVal">0%</div>
+                <button class="btn btn-outline" onclick="resetCalc()">Novo Cálculo</button>
+                <button class="btn" onclick="toggleAgenda(true)">Ver Agendamentos</button>
             </div>
-
-            <button class="btn" onclick="calculateConversion()">Calcular</button>
+            <button class="btn-panic" onclick="panicClean()">Botão de Pânico (Zerar Dados)</button>
         </div>
 
-        <div id="resultScreen" class="result-screen">
-            <p class="result-label">Sua taxa de conversão é:</p>
-            <div class="percentage-display" id="percentageValue">0%</div>
-            <button class="btn btn-outline" onclick="resetCalculator()">Calcular outra vez</button>
-        </div>
-
-        <div class="footer">
-            Desenvolvido por Thiago V.
+        <div id="appointmentScreen">
+            <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                <h2 style="text-transform: uppercase; letter-spacing: 2px;">Área de Controle</h2>
+                <button class="btn btn-outline" style="width:auto; padding: 8px 20px; font-size: 0.8rem;" onclick="toggleAgenda(false)">Voltar</button>
+            </div>
+            <div class="calendar-container">
+                <div id="monthDisplay" style="margin-bottom:8px; font-weight:800; text-align: left; font-size: 1.1rem; opacity: 0.8;"></div>
+                <div class="calendar-grid" id="calGrid"></div>
+            </div>
+            <div class="bottom-panels">
+                <div class="glass-panel">
+                    <div style="display:flex; gap:25px; margin-bottom:20px; font-weight: 800; text-transform: uppercase; font-size: 0.9rem;">
+                        <span id="tAtivo" style="cursor:pointer; border-bottom: 3px solid var(--success); padding-bottom: 5px;" onclick="setTab('ativo')">Próximos</span>
+                        <span id="tPerdido" style="cursor:pointer; opacity:0.4; padding-bottom: 5px;" onclick="setTab('perdido')">Passados</span>
+                    </div>
+                    <div id="listCont"></div>
+                </div>
+                <div class="glass-panel">
+                    <div class="date-selectors">
+                        <button class="date-btn active" id="dHoje" onclick="selDate('hoje')">Hoje</button>
+                        <button class="date-btn" id="dAmanha" onclick="selDate('amanha')">Amanhã</button>
+                        <button class="date-btn" id="dOutro" onclick="selDate('outro')">Data</button>
+                    </div>
+                    <div id="customDateContainer" class="input-group" style="display:none"><label>Data</label><input type="date" id="inDate"></div>
+                    <div style="display:flex; gap:20px;">
+                        <div class="input-group" style="flex:1"><label>Hora</label><input type="time" id="inTime"></div>
+                        <div class="input-group" style="flex:1"><label>Tel</label><input type="text" id="inTel" placeholder="(00) 00000-0000"></div>
+                    </div>
+                    <div class="input-group"><label>Cliente</label><input type="text" id="inName" placeholder="Nome completo"></div>
+                    <button class="btn" onclick="addApp()" style="margin-top: auto; background: var(--success); color: #000; padding: 18px;">Salvar Retorno</button>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        /* ================= LÓGICA (JAVASCRIPT) ================= */
-        
-        function calculateConversion() {
-            // Pegar valores dos inputs
-            const salesInput = document.getElementById('sales');
-            const callsInput = document.getElementById('calls');
-            
-            const sales = parseFloat(salesInput.value);
-            const calls = parseFloat(callsInput.value);
+        // Versão do Banco de Dados Local para evitar conflitos com versões antigas
+        const DB_NAME = 'apps_vendas_vFinal';
+        let apps = JSON.parse(localStorage.getItem(DB_NAME) || '[]');
+        let currentTab = 'ativo';
+        let dateMode = 'hoje';
 
-            // Validação simples
-            if (isNaN(sales) || isNaN(calls)) {
-                alert("Por favor, preencha ambos os campos.");
-                return;
-            }
+        window.onload = () => {
+            cleanOldData(); // Limpa dados > 14 dias ao iniciar
+            checkStatus();  // Verifica se alguém "venceu"
+            setInterval(checkStatus, 30000); 
+        };
 
-            if (calls === 0) {
-                alert("A quantidade de chamadas não pode ser zero.");
-                return;
-            }
-
-            if (sales > calls) {
-                alert("Cuidado: O número de vendas é maior que o de chamadas!");
-                // Não bloqueia, apenas avisa, caso haja algum erro de digitação
-            }
-
-            // Cálculo
-            let conversionRate = (sales / calls) * 100;
-            
-            // Troca de telas
+        function calculate() {
+            const s = document.getElementById('sales').value;
+            const c = document.getElementById('calls').value;
+            if (s === "" || c === "") return alert("Preencha vendas e chamadas.");
+            if (parseFloat(c) <= 0) return alert("Chamadas devem ser maiores que zero.");
+            const target = (parseFloat(s) / parseFloat(c)) * 100;
             document.getElementById('inputScreen').style.display = 'none';
-            const resultScreen = document.getElementById('resultScreen');
-            resultScreen.style.display = 'flex';
-            resultScreen.classList.add('fade-in');
-
-            // Iniciar animação do número
-            animateValue("percentageValue", 0, conversionRate, 1500);
+            document.getElementById('resultScreen').style.display = 'block';
+            animateValue("resVal", 0, target, 1200);
         }
 
-        function resetCalculator() {
-            // Limpar inputs
-            document.getElementById('sales').value = '';
-            document.getElementById('calls').value = '';
-
-            // Trocar telas de volta
-            document.getElementById('resultScreen').style.display = 'none';
-            const inputScreen = document.getElementById('inputScreen');
-            inputScreen.style.display = 'block';
-            inputScreen.classList.add('fade-in');
-        }
-
-        // Função para animar a contagem de 0 até o valor final
         function animateValue(id, start, end, duration) {
             const obj = document.getElementById(id);
             let startTimestamp = null;
-            
             const step = (timestamp) => {
                 if (!startTimestamp) startTimestamp = timestamp;
                 const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                
-                // Função de easing para tornar a animação mais suave no final
-                const easeOutQuad = progress * (2 - progress); 
-                
-                const currentVal = (progress * (end - start) + start);
-                
-                // Formatação: Se for inteiro mostra inteiro, se não, 2 casas decimais
-                let formattedVal = Number.isInteger(currentVal) 
-                    ? Math.floor(currentVal) 
-                    : currentVal.toFixed(2);
-
-                // Atualiza o texto
-                obj.innerHTML = formattedVal + "%";
-                
-                if (progress < 1) {
-                    window.requestAnimationFrame(step);
-                } else {
-                    // Garante que o valor final seja exato e formatado
-                    obj.innerHTML = (Number.isInteger(end) ? end : end.toFixed(2)) + "%";
-                }
+                obj.innerHTML = (progress * (end - start) + start).toFixed(1) + "%";
+                if (progress < 1) window.requestAnimationFrame(step);
             };
-            
             window.requestAnimationFrame(step);
+        }
+
+        function resetCalc() {
+            document.getElementById('sales').value = '';
+            document.getElementById('calls').value = '';
+            document.getElementById('resultScreen').style.display = 'none';
+            document.getElementById('inputScreen').style.display = 'block';
+        }
+
+        function toggleAgenda(show) {
+            const container = document.getElementById('mainContainer');
+            container.classList.toggle('expanded', show);
+            document.getElementById('calcSection').style.display = show ? 'none' : 'block';
+            document.getElementById('appointmentScreen').style.display = show ? 'flex' : 'none';
+            if(show) { renderAll(); initAudio(); }
+        }
+
+        function selDate(mode) {
+            dateMode = mode;
+            ['dHoje','dAmanha','dOutro'].forEach(id => document.getElementById(id).classList.remove('active'));
+            document.getElementById('d' + mode.charAt(0).toUpperCase() + mode.slice(1)).classList.add('active');
+            document.getElementById('customDateContainer').style.display = mode === 'outro' ? 'block' : 'none';
+        }
+
+        function addApp() {
+            const name = document.getElementById('inName').value;
+            const time = document.getElementById('inTime').value;
+            if(!name || !time) return alert("Preencha Nome e Hora.");
+
+            let d = new Date();
+            if(dateMode === 'amanha') d.setDate(d.getDate() + 1);
+            if(dateMode === 'outro') {
+                const specDate = document.getElementById('inDate').value;
+                if(!specDate) return alert("Selecione a data.");
+                d = new Date(specDate + 'T00:00:00');
+            }
+            
+            const [h, m] = time.split(':');
+            d.setHours(parseInt(h), parseInt(m), 0, 0);
+
+            apps.push({ id: Date.now(), name, tel: document.getElementById('inTel').value, ts: d.getTime(), status: 'ativo' });
+            save();
+            renderAll();
+            
+            // Reset campos
+            document.getElementById('inName').value = '';
+            document.getElementById('inTime').value = '';
+            document.getElementById('inTel').value = '';
+        }
+
+        function deleteApp(id) {
+            apps = apps.filter(a => a.id !== id);
+            save();
+            renderAll();
+        }
+
+        function panicClean() {
+            if(confirm("🚨 EXCLUIR TUDO? Essa ação é imediata e irreversível.")) {
+                localStorage.removeItem(DB_NAME);
+                apps = [];
+                location.reload();
+            }
+        }
+
+        function save() { localStorage.setItem(DB_NAME, JSON.stringify(apps)); }
+
+        function renderAll() {
+            const cont = document.getElementById('listCont');
+            cont.innerHTML = '';
+            let filtered = apps.filter(a => a.status === currentTab).sort((a, b) => a.ts - b.ts);
+            
+            if(filtered.length === 0) cont.innerHTML = '<p style="opacity:0.2; text-align:center; margin-top:30px;">Sem registros.</p>';
+
+            filtered.forEach(a => {
+                const dt = new Date(a.ts);
+                const timeFmt = dt.getHours().toString().padStart(2,'0') + ':' + dt.getMinutes().toString().padStart(2,'0');
+                cont.innerHTML += `
+                    <div class="appointment-card">
+                        <div>
+                            <div style="font-weight:700; font-size:1.1rem">${a.name}</div>
+                            <small style="opacity:0.8">⏰ ${timeFmt} | 📅 ${dt.getDate()}/${dt.getMonth()+1}</small>
+                            ${a.tel ? `<br><small style="color:var(--success); font-weight:bold">📞 ${a.tel}</small>` : ''}
+                        </div>
+                        <button class="delete-btn" onclick="deleteApp(${a.id})">✕</button>
+                    </div>`;
+            });
+
+            // Calendário Dinâmico
+            const grid = document.getElementById('calGrid');
+            grid.innerHTML = '';
+            const now = new Date();
+            const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+            document.getElementById('monthDisplay').innerText = now.toLocaleString('pt-br', { month: 'long' }).toUpperCase();
+            
+            for(let i=1; i<=daysInMonth; i++) {
+                let count = apps.filter(a => new Date(a.ts).getDate() === i && a.status === 'ativo' && new Date(a.ts).getMonth() === now.getMonth()).length;
+                grid.innerHTML += `<div class="calendar-cell ${i === now.getDate() ? 'today' : ''}">${i} ${count ? `<span class="badge">${count}</span>` : ''}</div>`;
+            }
+        }
+
+        function setTab(t) {
+            currentTab = t;
+            document.getElementById('tAtivo').style.opacity = t === 'ativo' ? '1' : '0.4';
+            document.getElementById('tPerdido').style.opacity = t === 'perdido' ? '1' : '0.4';
+            document.getElementById('tAtivo').style.borderBottom = t === 'ativo' ? '3px solid var(--success)' : 'none';
+            document.getElementById('tPerdido').style.borderBottom = t === 'perdido' ? '3px solid var(--success)' : 'none';
+            renderAll();
+        }
+
+        function checkStatus() {
+            const now = Date.now();
+            let changed = false;
+            apps.forEach(a => {
+                if(a.status === 'ativo' && now > a.ts) {
+                    a.status = 'perdido';
+                    changed = true;
+                    playAlarm();
+                }
+            });
+            if(changed) { save(); renderAll(); }
+        }
+
+        function cleanOldData() {
+            const TWO_WEEKS = 14 * 24 * 60 * 60 * 1000;
+            const now = Date.now();
+            const initialLen = apps.length;
+            apps = apps.filter(a => (now - a.ts) < TWO_WEEKS);
+            if(apps.length !== initialLen) save();
+        }
+
+        let audio;
+        function initAudio() { if(!audio) audio = new (window.AudioContext || window.webkitAudioContext)(); }
+        function playAlarm() {
+            if(!audio) return;
+            if(audio.state === 'suspended') audio.resume();
+            const osc = audio.createOscillator();
+            const g = audio.createGain();
+            osc.connect(g); g.connect(audio.destination);
+            osc.frequency.setValueAtTime(880, audio.currentTime);
+            g.gain.setValueAtTime(0.1, audio.currentTime);
+            g.gain.exponentialRampToValueAtTime(0.0001, audio.currentTime + 0.5);
+            osc.start(); osc.stop(audio.currentTime + 0.5);
         }
     </script>
 </body>
